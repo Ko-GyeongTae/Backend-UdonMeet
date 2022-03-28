@@ -1,0 +1,44 @@
+package middleware
+
+import (
+	"github.com/Backend-UdonMeet/utils"
+	"github.com/gofiber/fiber/v2"
+)
+
+func JSONMiddleware(c *fiber.Ctx) error {
+	c.Response().Header.Set("Content-Type", "application/json")
+	c.Response().Header.Set("Access-Control-Allow-Origin", "*")
+	return c.Next()
+}
+
+func AuthMiddleware(c *fiber.Ctx) error {
+
+	jwt, err := utils.GetTokenString(c)
+	utils.HandleErr(err)
+
+	_, user, err := utils.ValidateToken(string(jwt), c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "expired token",
+		})
+	}
+
+	_, err = method.SelectUserById(user.Id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "user not found",
+		})
+	}
+
+	if err != nil {
+		return c.SendStatus(401)
+	}
+	return c.Next()
+}
+
+func CIDMiddleware(c *fiber.Ctx) error {
+	//cid := c.Request().Header.Peek("gAuth")
+	//header := string(cid[:])
+	//fmt.Println(header)
+	return c.Next()
+}
