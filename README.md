@@ -2,9 +2,14 @@
 
 동네 친구를 만들어 보자!
 
-## Skill
+## Contributor
+
+- @Ko-GyeongTae
+
+## Tech Requirement (Tech Stack)
 
 - Typescript
+- ESLint
 - Typeorm
 - Express.js
 - MySQL
