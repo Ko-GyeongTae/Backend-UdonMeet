@@ -1,25 +1,22 @@
-# UdonMeet
-## Contributor
-- @Ko-GyeongTae
+# Udon Meet
 
-## Tech Requirement (Tech Stack)
-- Nest CLI
-- NestJS
-- TypeScript
-- ESLint
+동네 친구를 만들어 보자!
+
+## Skill
+
+- Typescript
 - Typeorm
-- Socket.IO
+- Express.js
 
-## Docker
-- Dockerfile을 이용해서 Docker Container
-- Docker Compose를 사용하고 있습니다.
+## Struct
 
-## Script
-```
-$ npm run start:dev
-```
-
-```
-$ npm run build
-$ npm run start
-```
+src \
+-- app.js # App entry point \
+ └───api # Express route controllers for all the endpoints of the app \
+ └───config # Environment variables and configuration related stuff \
+ └───jobs # Jobs definitions for agenda.js \
+ └───loaders # Split the startup process into modules \
+ └───models # Database models \
+ └───services # All the business logic is here \
+ └───subscribers # Event handlers for async task \
+ └───types # Type declaration files (d.ts) for Typescript
