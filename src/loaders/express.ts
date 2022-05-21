@@ -1,7 +1,16 @@
-import express from 'express';
+import express, { Router } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import Container from 'typedi';
+import { validateBodyMiddleware } from '../utils/validateMiddleware';
+import { SignInDto, SignUpDto } from '../models/dto/user.dto';
+import { CustomUserRepository } from '../models/repository/user.repository';
+import { User } from '../models/entity/user.entity';
+import { AppDataSource } from './typeorm';
+import { UserService } from '../services/user.service';
+import { UserController } from '../controllers/user.controller';
+import router from '../routes';
 
 export default async ({ app }: { app: express.Application }) => {
   app.get('/status', (req, res) => {
@@ -15,8 +24,10 @@ export default async ({ app }: { app: express.Application }) => {
 
   app.use(cors());
   app.use(morgan('dev'));
+  app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
+  app.use('/', router);
   // ...미들웨어들
   app.use((req, res, next) => {
     const err = new Error('Not Found');
