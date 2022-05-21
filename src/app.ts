@@ -1,7 +1,7 @@
 import express from 'express';
 import { Loaders } from './loaders';
 import 'reflect-metadata';
-import config from './config';
+import config from './configs';
 
 async function bootstrap() {
   const app: express.Application = express();

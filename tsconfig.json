@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "esModuleInterop": true, // es 모듈 가져오는 방법
+    "emitDecoratorMetadata": true,
     "noImplicitAny": false, // Any 타입 사용가능
     "typeRoots": [
       "./node_module/@types",
