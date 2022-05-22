@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import Container from 'typedi';
 import { validateBodyMiddleware } from '../utils/validateMiddleware';
 import { SignInDto, SignUpDto } from '../models/dto/user.dto';
@@ -24,6 +25,7 @@ export default async ({ app }: { app: express.Application }) => {
 
   app.use(cors());
   app.use(morgan('dev'));
+  app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
