@@ -15,8 +15,7 @@ export const validateBodyMiddleware = <T extends object>(
       forbidNonWhitelisted: true,
     })
       .then(() => next())
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         res.status(400).json({ message }).end();
       });
   };
@@ -34,8 +33,7 @@ export const validateQueryMiddleware = <T extends object>(
       forbidNonWhitelisted: true,
     })
       .then(() => next())
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         res.status(400).json({ message }).end;
       });
   };
