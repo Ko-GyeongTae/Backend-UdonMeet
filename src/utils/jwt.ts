@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
+import { Repository } from 'typeorm';
 import configs from '../configs';
-import { customUserRepository } from '../loaders/container';
+import { AppDataSource } from '../loaders/typeorm';
 import { User } from '../models/entity/user.entity';
+import { CustomUserRepository } from '../models/repository/user.repository';
 
 export const createJWT = (
   payload: object,
@@ -20,7 +22,10 @@ export const createJWT = (
 };
 
 export const verifyJWT = async (token: string) => {
-  const userRepository = customUserRepository;
+  const userRepository =
+    AppDataSource.createQueryRunner().manager.withRepository(
+      new CustomUserRepository(User, AppDataSource.manager),
+    );
   let data;
   try {
     data = jwt.verify(token, configs.jwtSecret);
