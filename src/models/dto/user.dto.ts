@@ -24,3 +24,11 @@ export class SignUpDto extends User {
   @IsString()
   password: string;
 }
+
+export class JwtDto {
+  @IsString()
+  accessToken: string;
+
+  @IsString()
+  refreshToken: string;
+}
