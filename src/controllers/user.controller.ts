@@ -5,34 +5,54 @@ import { SignInDto, SignUpDto } from '../models/dto/user.dto';
 
 @Service()
 export class UserController {
-  async signIn(req: Request, res: Response): Promise<void> {
+  constructor(private userService: UserService) {}
+
+  signIn = async (req: Request, res: Response): Promise<void> => {
     console.log('controller');
     const body: SignInDto = req.body;
-    const userService = Container.get(UserService);
-    const token = await userService.signIn(body);
-    if (token) {
-      res
-        .status(200)
-        .json({
-          access_token: token,
-        })
-        .end();
-    } else {
-      res.sendStatus(401).end();
-    }
-  }
 
-  async signUp(req: Request, res: Response): Promise<void> {
-    const body: SignUpDto = req.body;
-    const userService = Container.get(UserService);
-    console.log('SIGNUP');
-    try {
-      await userService.signUp(body);
-    } catch (e) {
-      console.log(e);
-      res.sendStatus(409).end();
+    const tokenObj = await this.userService.signIn(body);
+    if (!tokenObj) {
+      res.sendStatus(401).end();
       return;
     }
-    res.sendStatus(201).end();
-  }
+    const { accessToken, refreshToken } = tokenObj;
+
+    res
+      .status(200)
+      .cookie('accessToken', accessToken, {
+        maxAge: 1000 * 60 * 60 * 3,
+      })
+      .cookie('refreshToken', refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+        httpOnly: true,
+      })
+      .end();
+  };
+
+  signUp = async (req: Request, res: Response): Promise<void> => {
+    const body: SignUpDto = req.body;
+
+    if (await this.userService.signUp(body)) {
+      res.sendStatus(201).end();
+    } else {
+      res.sendStatus(409).end();
+    }
+  };
+
+  signOut = async (req: Request, res: Response): Promise<void> => {
+    res
+      .status(200)
+      .clearCookie('accessToken')
+      .clearCookie('refreshToken')
+      .end();
+  };
+
+  withDrawl = async (req: Request, res: Response): Promise<void> => {
+    if (await this.userService.withDrawal()) {
+      res.sendStatus(200).end();
+    } else {
+      res.sendStatus(400).end();
+    }
+  };
 }
