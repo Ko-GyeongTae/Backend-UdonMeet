@@ -1,0 +1,61 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: CI
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  CI:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          script: |
+            npm install
+            npm run build
+
+      - name: CI Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CI.
+          details: 'Success to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Finished.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: CI Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CI.
+          details: 'Fail to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Failed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Cancelled
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CI.
+          details: 'Cancel to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Canceled.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
