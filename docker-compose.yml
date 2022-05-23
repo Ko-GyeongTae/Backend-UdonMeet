@@ -22,3 +22,18 @@ services:
     ports:
       - ${PORT}
     restart: always
+  AuthServer-2:
+    image: 'kokt0203/udonmeet:latest'
+    container_name: UdonMeet-Authentication-Express-server
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+    volumes:
+      - ~/Document/code/DSM/Backend-Pumassi/logs/:/app/dist/logs # 연결할 로컬 디렉토리
+    ports:
+      - ${PORT}
+    restart: always
