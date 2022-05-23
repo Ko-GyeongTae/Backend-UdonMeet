@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { Repository } from 'typeorm';
 import configs from '../configs';
 import { AppDataSource } from '../loaders/typeorm';
 import { User } from '../models/entity/user.entity';

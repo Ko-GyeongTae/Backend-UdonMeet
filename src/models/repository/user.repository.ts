@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { EntityRepository, Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AppDataSource } from '../../loaders/typeorm';
 import { dtoToEntityTransformer } from '../../utils/dtoToEntity';
 import { User } from '../entity/user.entity';

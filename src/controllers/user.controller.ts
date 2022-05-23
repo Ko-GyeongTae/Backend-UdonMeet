@@ -1,4 +1,4 @@
-import Container, { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
 import { SignInDto, SignUpDto } from '../models/dto/user.dto';

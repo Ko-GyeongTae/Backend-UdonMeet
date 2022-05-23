@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppDataSource } from '../loaders/typeorm';
-import { Session } from '../models/entity/session.entity';
-import { CustomSessionRepository } from '../models/repository/session.repository';
-import { createJWT, verifyJWT } from '../utils/jwt';
+import { verifyJWT } from '../utils/jwt';
 
 export const jwtMiddleware = async (
   req: Request,

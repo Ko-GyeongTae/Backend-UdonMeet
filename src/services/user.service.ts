@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import { Service } from 'typedi';
 import crypto from 'crypto';
 import { JwtDto, SignInDto, SignUpDto } from '../models/dto/user.dto';
 import { User } from '../models/entity/user.entity';
