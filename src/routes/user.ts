@@ -20,6 +20,7 @@ router.post(
   userController.signUp,
 );
 router.put('/sign-out', jwtMiddleware, userController.signOut);
+router.put('/refresh', userController.refresh);
 router.delete('/with-drawl', jwtMiddleware, userController.withDrawl);
 
 export default router;
