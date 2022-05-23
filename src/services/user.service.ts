@@ -3,12 +3,18 @@ import crypto from 'crypto';
 import { JwtDto, SignInDto, SignUpDto } from '../models/dto/user.dto';
 import { User } from '../models/entity/user.entity';
 import { CustomUserRepository } from '../models/repository/user.repository';
-import { createJWT } from '../utils/jwt';
+import { createJWT, verifyJWT } from '../utils/jwt';
+import { CustomSessionRepository } from '../models/repository/session.repository';
+import { Session } from '../models/entity/session.entity';
+import { globalUser } from '../types';
 
 @Service()
 export class UserService {
   //private userRepository = customUserRepository;
-  constructor(private userRepository: CustomUserRepository) {}
+  constructor(
+    private userRepository: CustomUserRepository,
+    private sessionRepository: CustomSessionRepository,
+  ) {}
 
   signIn = async (body: SignInDto): Promise<JwtDto | null> => {
     const { email, password } = body;
@@ -30,8 +36,17 @@ export class UserService {
     };
 
     const jwtDto = new JwtDto();
-    jwtDto.accessToken = createJWT(payload, '5h');
-    jwtDto.refreshToken = createJWT({}, '14d', 'HS512');
+    jwtDto.accessToken = createJWT(payload, '1m');
+    jwtDto.refreshToken = createJWT({}, '3m', 'HS512');
+
+    const session = new Session();
+    session.userId = user.id;
+    session.refreshToken = jwtDto.refreshToken;
+    session.data = JSON.stringify(payload);
+
+    const result = await this.sessionRepository.insertSession(session);
+    console.log(result);
+
     return jwtDto;
   };
   signUp = async (body: SignUpDto): Promise<User | null> => {
@@ -43,18 +58,48 @@ export class UserService {
       return null;
     }
   };
-  signOut = async () => {
-    // const sessionRepository = await getRepository(Session);
-    // try {
-    //   await sessionRepository.delete(req.cookies.refreshToken);
-    // } catch (e) {
-    //   res.status(400);
-    //   return;
-    // }
+  signOut = async (token: string): Promise<boolean> => {
+    return await this.sessionRepository.deleteSessionByRefreshToken(token);
   };
-  withDrawal = async (): Promise<boolean> => {
-    return await this.userRepository.softDeleteUserById(
-      'f6a2f240-1dce-41c0-b216-fa49b6395079',
+  refresh = async (token: string): Promise<JwtDto | null> => {
+    const refreshResult = await verifyJWT(token);
+    if (!refreshResult.success) {
+      return null;
+    }
+
+    const userData =
+      await this.sessionRepository.findNewestSessionByRefreshToken(token);
+    console.log(userData);
+    if (!userData) {
+      console.log(2);
+      return null;
+    }
+
+    await this.sessionRepository.deleteSessionByRefreshToken(token);
+
+    const user = await this.userRepository.findOneExistUserById(
+      userData.userId,
     );
+
+    const payload = {
+      id: user?.id,
+      email: user?.email,
+      name: user?.name,
+    };
+
+    const jwtDto = new JwtDto();
+    jwtDto.accessToken = createJWT(payload, '1m');
+    jwtDto.refreshToken = createJWT({}, '3m', 'HS512');
+
+    const session = new Session();
+    session.userId = userData?.userId;
+    session.refreshToken = jwtDto.refreshToken;
+    session.data = userData?.data;
+
+    await this.sessionRepository.insertSession(session);
+    return jwtDto;
+  };
+  withDrawal = async (payload: globalUser): Promise<boolean> => {
+    return await this.userRepository.softDeleteUserById(payload.id);
   };
 }
