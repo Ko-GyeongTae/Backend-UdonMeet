@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { join } from 'path';
 import config from '../configs';
 import { User } from '../models/entity/user.entity';
+import { Session } from '../models/entity/session.entity';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: config.typeorm.database,
   synchronize: config.typeorm.synchronize,
   logging: config.typeorm.logging,
-  entities: [User],
+  entities: [User, Session],
   subscribers: [],
   migrations: [],
 });
