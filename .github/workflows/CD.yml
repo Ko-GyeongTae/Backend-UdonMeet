@@ -90,9 +90,9 @@ jobs:
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.4
         with:
-          key: ${{ secrets.SSH_PASSWORD }}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
           timeout: 40s
           script: |
             cd ~/udonmeet-auth-server
