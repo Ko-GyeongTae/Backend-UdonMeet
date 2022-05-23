@@ -8,7 +8,7 @@ services:
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
   AuthServer-1:
-    image: 'kokt0203/pumassi:latest'
+    image: 'kokt0203/udonmeet:latest'
     container_name: UdonMeet-Authentication-Express-server
     environment:
       - JWT_SECRET=${JWT_SECRET}
