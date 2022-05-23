@@ -46,7 +46,7 @@ export const verifyJWT = async (token: string) => {
     user.password = '';
     return {
       success: true,
-      data: user,
+      data,
     };
   }
 };
