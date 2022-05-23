@@ -1,0 +1,137 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: CD
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - '**'
+
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: kokt0203/udonmeet
+          tag-semver: |
+            {{version}}
+            {{major}}.{{minor}}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_NAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+
+      - name: CD Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CD.
+          details: 'Success to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Finished.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: CD Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CD.
+          details: 'Fail to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Failed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: CD Cancelled
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet CD.
+          details: 'Cancel to build with NodeJS:16 and dockerize repository'
+          footer: Ko-GyeongTae
+          text: Workflow is Canceled.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  Deploy:
+    needs: [CD]
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          key: ${{ secrets.SSH_PASSWORD }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          timeout: 40s
+          script: |
+            cd ~/udonmeet-auth-server
+            git pull origin main
+            sh start.sh
+
+      - name: Deploy Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet Deploy.
+          details: 'Success to deploy on server'
+          footer: Ko-GyeongTae
+          text: Workflow is Finished.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Deploy Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet Deploy.
+          details: 'Fail to deploy on server'
+          footer: Ko-GyeongTae
+          text: Workflow is Failed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Deploy Cancelled
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          username: Github Actions
+          avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
+          description: UdonMeet Deploy.
+          details: 'Cancel to deploy on server'
+          footer: Ko-GyeongTae
+          text: Workflow is Canceled.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
