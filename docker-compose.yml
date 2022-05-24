@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   nginx:
-    image: nginx:1.21.6-alpine
+    image: kokt0203/nginx-geoip:latest
     container_name: UdonMeet-Auth-Proxy
     ports:
       - 4100:4100
