@@ -30,7 +30,7 @@ jobs:
           severity: info
           username: Github Actions
           avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
-          description: UdonMeet CI.
+          description: UdonMeet Auth CI.
           details: 'Success to build with NodeJS:16 and dockerize repository'
           footer: Ko-GyeongTae
           text: Workflow is Finished.
@@ -42,7 +42,7 @@ jobs:
           severity: error
           username: Github Actions
           avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
-          description: UdonMeet CI.
+          description: UdonMeet Auth CI.
           details: 'Fail to build with NodeJS:16 and dockerize repository'
           footer: Ko-GyeongTae
           text: Workflow is Failed.
@@ -54,7 +54,7 @@ jobs:
           severity: warn
           username: Github Actions
           avatarUrl: https://avatars.githubusercontent.com/u/54465427?v=4
-          description: UdonMeet CI.
+          description: UdonMeet Auth CI.
           details: 'Cancel to build with NodeJS:16 and dockerize repository'
           footer: Ko-GyeongTae
           text: Workflow is Canceled.
