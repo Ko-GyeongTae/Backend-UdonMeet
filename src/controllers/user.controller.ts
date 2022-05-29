@@ -8,7 +8,6 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   signIn = async (req: Request, res: Response): Promise<void> => {
-    console.log('controller');
     const body: SignInDto = req.body;
 
     const tokenObj = await this.userService.signIn(body);

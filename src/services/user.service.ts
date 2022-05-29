@@ -36,22 +36,20 @@ export class UserService {
     };
 
     const jwtDto = new JwtDto();
-    jwtDto.accessToken = createJWT(payload, '1m');
-    jwtDto.refreshToken = createJWT({}, '3m', 'HS512');
+    jwtDto.accessToken = createJWT(payload, '6h');
+    jwtDto.refreshToken = createJWT({}, '14d', 'HS512');
 
     const session = new Session();
     session.userId = user.id;
     session.refreshToken = jwtDto.refreshToken;
     session.data = JSON.stringify(payload);
 
-    const result = await this.sessionRepository.insertSession(session);
-    console.log(result);
+    await this.sessionRepository.insertSession(session);
 
     return jwtDto;
   };
   signUp = async (body: SignUpDto): Promise<User | null> => {
     const result = await this.userRepository.insertUserWithHashing(body);
-    console.log(result);
     if (result) {
       return result;
     } else {
@@ -69,9 +67,7 @@ export class UserService {
 
     const userData =
       await this.sessionRepository.findNewestSessionByRefreshToken(token);
-    console.log(userData);
     if (!userData) {
-      console.log(2);
       return null;
     }
 
@@ -88,8 +84,8 @@ export class UserService {
     };
 
     const jwtDto = new JwtDto();
-    jwtDto.accessToken = createJWT(payload, '1m');
-    jwtDto.refreshToken = createJWT({}, '3m', 'HS512');
+    jwtDto.accessToken = createJWT(payload, '6h');
+    jwtDto.refreshToken = createJWT({}, '14d', 'HS512');
 
     const session = new Session();
     session.userId = userData?.userId;
