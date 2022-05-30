@@ -7,10 +7,7 @@ import router from '../routes';
 
 export default async ({ app }: { app: express.Application }) => {
   app.get('/status', (req, res) => {
-    res.status(200).end();
-  });
-  app.head('/status', (req, res) => {
-    res.status(200).end();
+    res.status(200).json({ isActive: true }).end();
   });
   app.enable('trust proxy');
 
