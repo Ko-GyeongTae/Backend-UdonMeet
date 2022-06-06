@@ -4,6 +4,14 @@ import { AppDataSource } from '../loaders/typeorm';
 import { User } from '../models/entity/user.entity';
 import { CustomUserRepository } from '../models/repository/user.repository';
 
+export interface VerifiedObj {
+  id: string;
+  email: string;
+  name: string;
+  iat: number;
+  exp: number;
+}
+
 export const createJWT = (
   payload: object,
   expiresIn: string,
@@ -25,7 +33,7 @@ export const verifyJWT = async (token: string) => {
     AppDataSource.createQueryRunner().manager.withRepository(
       new CustomUserRepository(User, AppDataSource.manager),
     );
-  let data;
+  let data: VerifiedObj;
   try {
     data = jwt.verify(token, configs.jwtSecret);
   } catch (e: any) {
@@ -42,7 +50,6 @@ export const verifyJWT = async (token: string) => {
       message: 'User not found',
     };
   } else {
-    user.password = '';
     return {
       success: true,
       data,
