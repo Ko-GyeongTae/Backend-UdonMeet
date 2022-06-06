@@ -98,4 +98,25 @@ export class UserService {
   withDrawal = async (payload: globalUser): Promise<boolean> => {
     return await this.userRepository.softDeleteUserById(payload.id);
   };
+  tokenValidate = async (payload: JwtDto): Promise<boolean> => {
+    const { accessToken, refreshToken } = payload;
+
+    const accessResult = await verifyJWT(accessToken);
+    const refreshResult = await verifyJWT(refreshToken);
+
+    if (!(accessResult.success && refreshResult.success)) {
+      return false;
+    }
+    const session =
+      await this.sessionRepository.findNewestSessionByRefreshToken(
+        refreshToken,
+      );
+    if (!session) {
+      return false;
+    }
+    if (session.userId !== accessResult.data?.id) {
+      return false;
+    }
+    return true;
+  };
 }
