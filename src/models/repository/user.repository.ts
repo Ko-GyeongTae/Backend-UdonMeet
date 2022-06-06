@@ -33,7 +33,7 @@ export class CustomUserRepository extends Repository<User> {
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
 
-    await queryRunner.startTransaction();
+    await queryRunner.startTransaction('SERIALIZABLE');
 
     try {
       await queryRunner.manager.insert(User, userData);
