@@ -17,7 +17,6 @@ export class CustomUserRepository extends Repository<User> {
   }
 
   async findOneExistUserByEmail(email: string): Promise<User | null> {
-    console.log(email);
     const existUserData: User | null = await AppDataSource.createQueryBuilder()
       .select('user')
       .from(User, 'user')

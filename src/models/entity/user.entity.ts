@@ -19,7 +19,7 @@ export class User {
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
-  password: string;
+  password?: string;
 
   @CreateDateColumn()
   createdAt: Date;

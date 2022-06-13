@@ -15,7 +15,7 @@ export class UserController {
       res.sendStatus(401).end();
       return;
     }
-    const { accessToken, refreshToken } = tokenObj;
+    const { accessToken, refreshToken, user } = tokenObj;
 
     res
       .status(200)
@@ -26,6 +26,7 @@ export class UserController {
         maxAge: 1000 * 60 * 60 * 24 * 14,
         httpOnly: true,
       })
+      .json(user)
       .end();
   };
 
