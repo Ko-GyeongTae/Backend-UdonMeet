@@ -7,7 +7,6 @@ import { validateBodyMiddleware } from '../utils/validateMiddleware';
 
 const router = Router();
 const userController = Container.get(UserController);
-console.log('router');
 
 router.post(
   '/sign-in',

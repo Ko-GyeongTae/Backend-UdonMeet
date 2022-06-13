@@ -8,7 +8,6 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   signIn = async (req: Request, res: Response): Promise<void> => {
-    console.log('controller');
     const body: SignInDto = req.body;
 
     const tokenObj = await this.userService.signIn(body);
@@ -73,6 +72,10 @@ export class UserController {
 
   withDrawl = async (req: Request, res: Response): Promise<void> => {
     const payload = req.user;
+    if (payload === undefined) {
+      res.sendStatus(401).end();
+      return;
+    }
     if (await this.userService.withDrawal(payload)) {
       res.sendStatus(200).end();
     } else {

@@ -1,25 +1,13 @@
-import express, { Router } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import Container from 'typedi';
-import { validateBodyMiddleware } from '../utils/validateMiddleware';
-import { SignInDto, SignUpDto } from '../models/dto/user.dto';
-import { CustomUserRepository } from '../models/repository/user.repository';
-import { User } from '../models/entity/user.entity';
-import { AppDataSource } from './typeorm';
-import { UserService } from '../services/user.service';
-import { UserController } from '../controllers/user.controller';
 import router from '../routes';
 
 export default async ({ app }: { app: express.Application }) => {
   app.get('/status', (req, res) => {
-    console.log(req.ip);
-    res.status(200).end();
-  });
-  app.head('/status', (req, res) => {
-    res.status(200).end();
+    res.status(200).json({ isActive: true }).end();
   });
   app.enable('trust proxy');
 
