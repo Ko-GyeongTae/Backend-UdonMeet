@@ -34,10 +34,12 @@ export class UserService {
       email: user.email,
       name: user.name,
     };
+    delete user.password;
 
     const jwtDto = new JwtDto();
     jwtDto.accessToken = createJWT(payload, '6h');
     jwtDto.refreshToken = createJWT({}, '14d', 'HS512');
+    jwtDto.user = user;
 
     const session = new Session();
     session.userId = user.id;

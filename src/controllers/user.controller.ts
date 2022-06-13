@@ -15,7 +15,7 @@ export class UserController {
       res.sendStatus(401).end();
       return;
     }
-    const { accessToken, refreshToken } = tokenObj;
+    const { accessToken, refreshToken, user } = tokenObj;
 
     res
       .status(200)
@@ -26,6 +26,7 @@ export class UserController {
         maxAge: 1000 * 60 * 60 * 24 * 14,
         httpOnly: true,
       })
+      .json(user)
       .end();
   };
 
@@ -80,6 +81,16 @@ export class UserController {
       res.sendStatus(200).end();
     } else {
       res.sendStatus(400).end();
+    }
+  };
+
+  tokenValidate = async (req: Request, res: Response): Promise<void> => {
+    const accessToken = req.cookies['accessToken'];
+    const refreshToken = req.cookies['refreshToken'];
+    if (await this.userService.tokenValidate({ accessToken, refreshToken })) {
+      res.sendStatus(200).end();
+    } else {
+      res.status(401).clearCookie('accessToken').end();
     }
   };
 }
