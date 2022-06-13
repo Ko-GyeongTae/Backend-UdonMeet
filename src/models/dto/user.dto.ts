@@ -1,4 +1,10 @@
-import { IsEmail, IsObject, IsString, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsObject,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { User } from '../entity/user.entity';
 
 export class SignInDto extends User {
@@ -33,5 +39,6 @@ export class JwtDto {
   refreshToken: string;
 
   @IsObject()
-  user: User;
+  @IsOptional()
+  user?: User;
 }

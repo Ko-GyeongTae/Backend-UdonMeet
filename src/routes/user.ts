@@ -21,5 +21,6 @@ router.post(
 router.put('/sign-out', jwtMiddleware, userController.signOut);
 router.put('/refresh', userController.refresh);
 router.delete('/with-drawl', jwtMiddleware, userController.withDrawl);
+router.get('/validate', jwtMiddleware, userController.tokenValidate);
 
 export default router;

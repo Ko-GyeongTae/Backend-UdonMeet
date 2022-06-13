@@ -83,4 +83,14 @@ export class UserController {
       res.sendStatus(400).end();
     }
   };
+
+  tokenValidate = async (req: Request, res: Response): Promise<void> => {
+    const accessToken = req.cookies['accessToken'];
+    const refreshToken = req.cookies['refreshToken'];
+    if (await this.userService.tokenValidate({ accessToken, refreshToken })) {
+      res.sendStatus(200).end();
+    } else {
+      res.status(401).clearCookie('accessToken').end();
+    }
+  };
 }
