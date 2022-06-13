@@ -9,7 +9,7 @@ export interface globalUser {
 declare global {
   namespace Express {
     export interface Request {
-      user: globalUser;
+      user?: globalUser;
     }
   }
 

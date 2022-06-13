@@ -3,14 +3,15 @@ import configs from '../configs';
 import { AppDataSource } from '../loaders/typeorm';
 import { User } from '../models/entity/user.entity';
 import { CustomUserRepository } from '../models/repository/user.repository';
+import { globalUser } from '../types';
 
-export interface VerifiedObj {
-  id: string;
-  email: string;
-  name: string;
-  iat: number;
-  exp: number;
-}
+// interface VerifiedObj {
+//   id: string;
+//   email: string;
+//   name: string;
+//   iat: number;
+//   exp: number;
+// }
 
 export const createJWT = (
   payload: object,
@@ -33,7 +34,7 @@ export const verifyJWT = async (token: string) => {
     AppDataSource.createQueryRunner().manager.withRepository(
       new CustomUserRepository(User, AppDataSource.manager),
     );
-  let data: VerifiedObj;
+  let data: globalUser;
   try {
     data = jwt.verify(token, configs.jwtSecret);
   } catch (e: any) {
