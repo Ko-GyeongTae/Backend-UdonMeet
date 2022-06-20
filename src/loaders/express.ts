@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import router from '../routes';
 
 export default async ({ app }: { app: express.Application }) => {
-  app.get('/status', (req, res) => {
+  app.get('/status', (_req, res) => {
     res.status(200).json({ isActive: true }).end();
   });
   app.enable('trust proxy');
@@ -24,11 +24,12 @@ export default async ({ app }: { app: express.Application }) => {
 
   app.use('/', router);
   // ...미들웨어들
-  app.use((req, res, next) => {
+  app.use((_req, _res, next) => {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
   });
+
   app.use((err, req, res, next) => {
     res
       .status(err.status || 500)
@@ -36,6 +37,7 @@ export default async ({ app }: { app: express.Application }) => {
         message: err.message,
       })
       .end();
+    next();
   });
   // express app으로 return
   return app;
