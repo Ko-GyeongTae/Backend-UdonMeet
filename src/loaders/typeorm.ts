@@ -1,5 +1,4 @@
 import { DataSource } from 'typeorm';
-import { join } from 'path';
 import config from '../configs';
 import { User } from '../models/entity/user.entity';
 import { Session } from '../models/entity/session.entity';

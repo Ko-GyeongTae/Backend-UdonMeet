@@ -11,7 +11,12 @@ export default async ({ app }: { app: express.Application }) => {
   });
   app.enable('trust proxy');
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  );
   app.use(morgan('dev'));
   app.use(cookieParser());
   app.use(bodyParser.json());
