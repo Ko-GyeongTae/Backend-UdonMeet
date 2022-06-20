@@ -29,12 +29,10 @@ export class UserService {
       return null;
     }
 
-    const payload = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
     delete user.password;
+    const payload = {
+      ...user,
+    };
 
     const jwtDto = new JwtDto();
     jwtDto.accessToken = createJWT(payload, '6h');

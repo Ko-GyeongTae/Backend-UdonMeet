@@ -42,12 +42,15 @@ export class UserController {
 
   signOut = async (req: Request, res: Response): Promise<void> => {
     const refreshToken = req.cookies['refreshToken'];
-    await this.userService.signOut(refreshToken);
-    res
-      .status(200)
-      .clearCookie('accessToken')
-      .clearCookie('refreshToken')
-      .end();
+    if (await this.userService.signOut(refreshToken)) {
+      res
+        .status(200)
+        .clearCookie('accessToken')
+        .clearCookie('refreshToken')
+        .end();
+      return;
+    }
+    res.status(401).end();
   };
 
   refresh = async (req: Request, res: Response): Promise<void> => {
